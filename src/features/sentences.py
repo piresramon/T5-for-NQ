@@ -2,7 +2,7 @@
 import numpy as np
 import pandas as pd
 import re
-from typing import List, Tuple
+from typing import List, Tuple, Dict
 
 SENTENCE_ID_PATTERN = r'\[SENT(.*?)\]'
 SUBANSWER_PATTERN = r'([^[\]]+)(?:$|\[)'
@@ -150,7 +150,27 @@ def check_sent_id_is_valid(
         return False
 
     return True
-    
+
+
+def group_qas(example_ids: List[str]) -> Dict[str, List[int]]:
+    """Groups the sentences according to qa-ids of the examples.
+
+    Args:
+        sentences: List of qa-ids (strings)
+
+    Returns:
+        Dict with qa-ids (document-type + type-name) as keys and list of indexes
+        of grouped sentences as values.
+    """
+    qid_dict = {}
+    for idx, example_id in enumerate(example_ids):
+        if example_id in qid_dict.keys():
+            qid_dict[example_id].append(idx)
+        else:
+            qid_dict[example_id] = [idx]
+
+    return qid_dict
+
 
 def deconstruct_answer(
     answer_sentence: T5_SENTENCE = ''
