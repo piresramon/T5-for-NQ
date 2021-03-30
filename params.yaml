@@ -1,0 +1,41 @@
+model_name_or_path: unicamp-dl/ptt5-base-portuguese-vocab
+do_lower_case: false
+max_seq_length: 512
+
+# optimizer
+optimizer: AdamW
+lr: 1e-4
+weight_decay: 5e-5
+
+# preprocess Natural Questions dataset
+train_file: data/raw/natural-questions/v1.0/train/nq-train-*.jsonl.gz
+valid_file: data/raw/natural-questions/v1.0/dev/nq-dev-00.jsonl.gz
+test_file: data/raw/natural-questions/v1.0/dev/nq-dev-*.jsonl.gz
+
+# dataset
+train_batch_size: 4
+val_batch_size: 16
+shuffle_train: true
+use_sentence_id: false
+
+seed: 20210329
+num_workers: 8
+
+# inference
+max_length: 60
+num_beams: 5
+get_highestprob_answer: true
+split_compound_answers: true
+group_qas: true
+only_misprediction_outputs: true
+
+# Trainer
+gpus: 1
+max_epochs: 20
+deterministic: true
+accumulate_grad_batches: 4
+amp_level: O1
+precision: 32
+gradient_clip_val: 1.0
+val_check_interval: 0.2
+check_val_every_n_epoch: 1
