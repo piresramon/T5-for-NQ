@@ -8,7 +8,10 @@ import pytorch_lightning as pl
 
 from transformers import T5Tokenizer, T5ForConditionalGeneration, T5Config
 
-from src.features.sentences import get_highest_probability_window, split_compound_labels_and_predictions
+from src.features.sentences import (
+        get_highest_probability_window,
+        split_compound_labels_and_predictions,
+        group_qas)
 from src.utils.metrics import t5_qa_evaluate
 from src.utils.project import group_qas
 
