@@ -9,7 +9,7 @@ from pytorch_lightning import Trainer, seed_everything
 from pytorch_lightning.callbacks.model_checkpoint import ModelCheckpoint
 
 from src.models.qa_model import LitQA
-from src.data.nq_data import QADataModule
+from src.data.qa_data import QADataModule
 
 
 def main():
