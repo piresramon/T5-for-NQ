@@ -204,7 +204,7 @@ class LitQA(QAClassifier, pl.LightningModule):
 
         f = open('outputs.txt', 'w')
         f.write('{0:<50} | {1:50} | {2:30} | {3}\n'.format('label', 'prediction', 'uuid', 'prob'))
-        if qid_dict == {}:
+        if qid_dict == {} or list(qid_dict.keys()) == ['ORIG']:
             for label, prediction, doc_id, prob in zip(labels, predictions, doc_ids, probs):
                 if label != prediction or label == prediction and not self.hparams.only_misprediction_outputs:
                     f.write('{0:<50} | {1:50} | {2:30} | {3}\n'.format(label, prediction, doc_id, prob))
