@@ -9,9 +9,6 @@ import re
 import string
 from typing import Dict, Optional
 
-import torch
-from pytorch_lightning import metrics
-
 
 def normalize_answer(s):
     """Lower text and remove punctuation, articles and extra whitespace."""
@@ -43,7 +40,6 @@ def compute_exact(a_gold, a_pred):
     return int(normalize_answer(a_gold) == normalize_answer(a_pred))
 
 
-
 def compute_f1(a_gold, a_pred):
     gold_toks = get_tokens(a_gold)
     pred_toks = get_tokens(a_pred)
@@ -59,24 +55,6 @@ def compute_f1(a_gold, a_pred):
     f1 = (2 * precision * recall) / (precision + recall)
     return f1
 
-
-def compute_precision_recall(answers, preds):
-    predictions, target = [], []
-    precision = metrics.classification.Precision(num_classes=1)
-    recall = metrics.classification.Recall(num_classes=1)
-    for i, (a_gold, a_pred) in enumerate(zip(answers, preds)):
-
-        gold = normalize_answer(a_gold)
-        pred = normalize_answer(a_pred)
-
-        target.append(1 if 'sim' in gold else 0)  # assuming if SIM is not part of answer, class is negative
-        predictions.append(1 if 'sim' in pred else 0)   # assuming if SIM is not part of answer, class is negative
-
-    predictions = torch.tensor(predictions)
-    target = torch.tensor(target)
-
-    return precision(predictions, target).item(), recall(predictions, target).item()
-    
 
 def make_eval_dict(exact_scores, f1_scores, qid_list=None):
     if not qid_list:
@@ -142,14 +120,5 @@ def t5_qa_evaluate(answers, preds, qid_dict: Optional[Dict] = None):
 
     for (kword, qid_list) in qid_dict.items():
         evaluation[kword] = make_eval_dict(exact, f1, qid_list)
-
-        answers_kw = [answers[i] for i in qid_list]
-        preds_kw = [preds[i] for i in qid_list]
-
-        precision, recall = compute_precision_recall(answers_kw, preds_kw)
-        f1_measure = (2 * precision * recall) / (precision + recall)
-        evaluation[kword]['precision'] = precision
-        evaluation[kword]['recall'] = recall
-        evaluation[kword]['f1-measure'] = f1_measure
 
     return evaluation
