@@ -128,7 +128,7 @@ def split_t5_sentence_into_components(
         Sentence ids, type names, answers/sub-answers
     """
     sent_ids = _find_ids_of_sent_tokens(sentence)
-    type_names = _find_type_names(sentence, map_type=map_type)
+    type_names = _find_type_names(sentence)
     sub_answers = _find_sub_answers(sentence)
 
     return sent_ids, type_names, sub_answers
